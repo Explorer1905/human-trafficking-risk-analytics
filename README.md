@@ -1,87 +1,179 @@
-# **Dataset Overview**
+# Human Trafficking Risk Analytics Dashboard
 
-This dataset captures detailed information about customer behavior and purchasing patterns, primarily from an e-commerce or retail platform. It includes various features that help in analyzing how customers interact with the site, their purchasing habits, and some demographic details. This is a synthetic dataset generated for educational purposes by Gretel AI.
+> An ML-powered analytics platform for assessing human trafficking risk patterns across India, built for law enforcement, researchers, and policymakers.
 
-## **Key Variables and Descriptions**
+**Research-backed** · Research paper under minor revision at *Expert Systems with Applications*, Elsevier (Impact Factor 7.5)
 
-### **Customer ID**
-A unique identifier assigned to each customer. This attribute is essential for tracking individual customer behavior across different features in the dataset.
+---
 
-### **Age**
-Records the age of each customer. This attribute is useful for demographic analysis, helping to identify age-related trends and preferences in purchasing behavior.
+## Overview
 
-### **Gender**
-Indicates the gender of each customer (e.g., Male, Female). Analyzing this attribute allows for understanding gender-specific trends in product preferences and purchasing habits.
+This project is an open-source, interactive analytics dashboard built on 43,671 victim records spanning multiple years across all Indian states and union territories. It combines machine learning, time-series forecasting, anomaly detection, and geospatial visualization into a unified platform to surface actionable insights on human trafficking patterns in India.
 
-### **Location**
-Represents the geographic location of the customer. This attribute helps in identifying regional trends and differences in customer behavior, which can inform location-based marketing strategies.
+---
 
-### **Annual Income**
-Reflects the annual income of the customer. This financial attribute is critical for segmenting customers by their purchasing power and understanding the relationship between income levels and buying patterns.
+## Features
 
-### **Purchase History**
-A list of products that each customer has purchased, including details such as the purchase date, product category, and price. It provides insights into customer preferences and helps in analyzing repeat purchases and category-specific trends.
+- **Risk Classification** — Hybrid XGBoost + LightGBM ensemble achieving 93.4% accuracy and 0.97 AUC
+- **Time-Series Forecasting** — ARIMA(1,1,1) model for year-on-year trend prediction
+- **Anomaly Detection** — Isolation Forest for identifying statistical outliers in trafficking data
+- **Clustering** — DBSCAN-based regional pattern identification and corridor analysis
+- **Geospatial Visualization** — Interactive choropleth maps with state-level filtering
+- **Automated Insights Engine** — AI-generated trend summaries and key findings
+- **NLP Chatbot** — Natural language interface for querying the dataset
+- **Downloadable Reports** — One-click CSV export for research use
 
-### **Browsing History**
-A log of products viewed by each customer, along with timestamps. This attribute is important for understanding customer interest and engagement, even if a purchase was not made.
+---
 
-### **Product Reviews**
-Contains text reviews written by customers about products they have purchased, along with a rating (1-5 stars). This attribute provides qualitative insights into customer satisfaction and product quality.
+## Tech Stack
 
-### **Time on Site**
-Measures the total time a customer spends on the platform during their visit. It is a key metric for analyzing user engagement and can be correlated with browsing and purchasing behavior.
+| Layer | Technologies |
+|-------|-------------|
+| Backend | Python, Flask |
+| ML / Analytics | XGBoost, LightGBM, Scikit-learn, Statsmodels |
+| Visualization | Plotly, Dash, Dash Bootstrap Components |
+| Data Processing | Pandas, NumPy |
+| Geospatial | GeoJSON (all Indian states), DBSCAN clustering |
+| Frontend | HTML, CSS, Bootstrap, JavaScript |
 
-## **Data Summary**
+---
 
-- **Customer ID**
-  - **Range:** 1001.00 - 1013.00
-  - **Mean:** 1007.00
-  - **Standard Deviation:** 3.59
+## Project Structure
 
-- **Age**
-  - **Range:** 24.00 - 65.00
-  - **Mean:** 40
-  - **Standard Deviation:** 11
+```
+human-trafficking-risk-analytics/
+├── app.py                        # Main Flask application
+├── dash_app.py                   # Dash-based dashboard
+├── enhanced_dash_app.py          # Enhanced Dash version with full features
+├── load_and_clean.py             # Data loading and preprocessing pipeline
+├── gui_app.py                    # GUI interface
+├── saved_models/                 # Pre-trained ML model files
+│   ├── advanced_risk_model.pkl
+│   └── basic_risk_model.pkl
+├── templates/                    # HTML templates
+│   ├── index.html
+│   └── map.html
+├── static/css/                   # Stylesheets
+├── assets/                       # Dash assets
+├── india-maps-data-main/         # GeoJSON & TopoJSON for all Indian states
+├── requirements_enhanced.txt     # Python dependencies
+├── ARIMA_EXPLANATION.md
+├── DASHBOARD_COMPONENTS_DETAILED.md
+└── README.md
+```
 
-- **Gender**
-  - **Distribution:** Female (52%), Male (36%), Other (12%)
+---
 
-- **Location**
-  - **Most Common Locations:** City D (24%), City E (12%), Other (64%)
+## Getting Started
 
-- **Annual Income**
-  - **Range:** 40,000.00 - 100,000.00
-  - **Mean:** 65,800.00
-  - **Standard Deviation:** 16,900.00
+### Prerequisites
 
-- **Purchase History**
-  - **Example Entries:** 
-    - `[{"Date": "2022-03-05", "Category": "Clothing", "Price": 34.99}, ...]`
-  
-- **Browsing History**
-  - **Example Entries:** 
-    - `[{"Timestamp": "2022-03-10T14:30:00Z"}, ...]`
+- Python 3.8+
+- pip
 
-- **Product Reviews**
-  - **Example Reviews:** 
-    - `{"Review Text": "Excellent product, highly recommend!", "Rating": 5}`
+### Installation
 
-- **Time on Site**
-  - **Range:** 32.50 - 486.30 minutes
-  - **Mean:** 233 minutes
-  - **Standard Deviation:** 109 minutes
+```bash
+# Clone the repository
+git clone https://github.com/Explorer1905/human-trafficking-risk-analytics.git
+cd human-trafficking-risk-analytics
 
-## **Collection Methodology**
+# Install dependencies
+pip install -r requirements_enhanced.txt
+```
 
-The dataset was generated using machine learning algorithms that simulate typical customer interactions with an e-commerce platform. The methodology involves:
-- **Pattern Recognition:** Identifying and reproducing patterns seen in real-world customer data.
-- **Synthetic Data Generation:** Creating data points for each feature based on recognized patterns.
-- **Controlled Variation:** Incorporating controlled variations to ensure diversity while maintaining realistic relationships.
+### Running the App
 
-## **License**
+```bash
+# Flask app
+python app.py
 
-This dataset is licensed under the [Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
+# Or the enhanced Dash app
+python enhanced_dash_app.py
+```
 
-## **Kaggle Link**
+Then open `http://localhost:5000` in your browser.
 
-You can access the dataset on Kaggle [here](https://www.kaggle.com/datasets/paulsamuelwe/e-commerce-customer-behaviour-dataset).
+### Dataset
+
+The dataset contains 43,671 records with the following key columns:
+
+| Column | Description |
+|--------|-------------|
+| `state` | Indian state / union territory |
+| `age_group` | Victim age category (Below 18, 18–30, Above 30) |
+| `gender` | Male / Female / Unknown |
+| `region_type` | State or union territory |
+| `risk_label` | Target variable — High / Low risk |
+| `year` | Year of record |
+
+> **Note:** The raw dataset is not included in this repository as it is linked to an ongoing research submission. The dataset is available on request for research purposes — please open an issue or email the maintainer.
+
+---
+
+## Model Performance
+
+| Model | Accuracy | AUC |
+|-------|----------|-----|
+| XGBoost + LightGBM Ensemble | 93.4% | 0.97 |
+| Isolation Forest (Anomaly Detection) | — | — |
+| ARIMA(1,1,1) (Forecasting) | — | — |
+
+---
+
+## Contributing
+
+Contributions are welcome! Here are some ways to get involved:
+
+**Good first issues (beginner-friendly)**
+- Improve README documentation
+- Add unit tests for data loading functions
+- Fix UI/UX issues in the dashboard
+- Add new chart types to the visualization layer
+
+**Intermediate issues**
+- Add support for newer NCRB datasets (2021–2023)
+- Improve the NLP chatbot with better intent parsing
+- Add REST API endpoints for external data access
+- Mobile-responsive improvements
+
+**Advanced issues**
+- Integrate newer ML models (CatBoost, TabNet)
+- Build a data ingestion pipeline for live NCRB updates
+- Extend geospatial analysis to district-level mapping
+
+To contribute:
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Make your changes and commit (`git commit -m 'Add: your feature'`)
+4. Push to your branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+---
+
+## Research
+
+This project is backed by an ongoing research paper:
+
+> **Shravani Chavan et al.** — *A Multi-Model Analytics Framework for Human Trafficking Risk Assessment and Trend Prediction in India*  
+> *Expert Systems with Applications*, Elsevier (Impact Factor 7.5) — Under Minor Revision (2026)
+
+---
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## Author
+
+**Shravani Chavan**  
+Computer Engineering Student, Vidyalankar Institute of Technology, Mumbai  
+[GitHub](https://github.com/Explorer1905) · [LinkedIn](https://linkedin.com/in/shravani-chavan)
+
+---
+
+*Built with the goal of using data and AI to support anti-trafficking efforts in India.*
