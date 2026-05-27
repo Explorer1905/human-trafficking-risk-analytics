@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geographic Analysis - Human Trafficking Maps</title>
+    
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Map-specific styling */
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .map-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .map-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-wrapper {
+            padding: 1rem;
+            min-height: 500px;
+        }
+        
+        .plotly-graph-div {
+            background: transparent !important;
+        }
+        
+        .map-info {
+            background: var(--secondary-bg);
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--accent-text);
+        }
+        
+        .map-legend {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        .back-button {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .back-button {
+                position: static;
+                margin: 2rem auto;
+                display: block;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-globe-americas"></i>
+            Geographic Analysis
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="/" onclick="console.log('Dashboard clicked'); return true;"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="/map" class="active"><i class="fas fa-map"></i> Geographic View</a></li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-map-marked-alt"></i> Geographic Analysis Dashboard</h1>
+            <p>Spatial visualization and analysis of human trafficking patterns across India</p>
+        </div>
+
+        <!-- Maps Grid -->
+        <div class="map-grid">
+            <!-- High-Risk Choropleth Map -->
+            <div class="map-container">
+                <div class="map-header">
+                    <h3 class="map-title">
+                        <i class="fas fa-map"></i> 
+                        High-Risk Regions Heatmap
+                    </h3>
+                </div>
+                <div class="map-wrapper">
+                    {{ choropleth_html | safe }}
+                </div>
+                <div class="map-info">
+                    <div class="map-legend">
+                        <strong>Legend:</strong>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #0a0e1a;"></div>
+                            <span>Low Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span>Medium Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span>High Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #dc2626;"></div>
+                            <span>Very High Risk</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trafficking Routes Map -->
+            <div class="map-container">
+                <div class="map-header">
+                    <h3 class="map-title">
+                        <i class="fas fa-route"></i> 
+                        Simulated Trafficking Routes
+                    </h3>
+                </div>
+                <div class="map-wrapper">
+                    {{ routes_html | safe }}
+                </div>
+                <div class="map-info">
+                    <div class="map-legend">
+                        <strong>Route Analysis:</strong>
+                        <div class="legend-item">
+                            <i class="fas fa-circle" style="color: #00d4ff;"></i>
+                            <span>Source Cities (FROM)</span>
+                        </div>
+                        <div class="legend-item">
+                            <i class="fas fa-square" style="color: #ff6b35;"></i>
+                            <span>Destination Cities (TO)</span>
+                        </div>
+                        <div class="legend-item">
+                            <i class="fas fa-arrow-right" style="color: white;"></i>
+                            <span>Route Direction</span>
+                        </div>
+                        <div class="legend-item">
+                            <i class="fas fa-info-circle" style="color: var(--primary-blue);"></i>
+                            <span>Routes are simulated based on data patterns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Summary -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <h3><i class="fas fa-analytics"></i> Geographic Insights</h3>
+            </div>
+            <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <div class="kpi-card">
+                    <div class="icon metric-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <div class="metric">Regional Patterns</div>
+                    <div class="metric-label">Identify high-risk areas through choropleth visualization</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="icon metric-icon">
+                        <i class="fas fa-arrows-alt"></i>
+                    </div>
+                    <div class="metric">Movement Tracking</div>
+                    <div class="metric-label">Analyze potential trafficking routes between states</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="icon metric-icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <div class="metric">Hotspot Detection</div>
+                    <div class="metric-label">Focus intervention efforts on critical regions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="/" class="btn btn-primary btn-lg back-button">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <script>
+        // Enhance plotly maps with dark theme
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark theme to all plotly maps
+            const maps = document.querySelectorAll('.plotly-graph-div');
+            maps.forEach(map => {
+                if (map._fullLayout) {
+                    Plotly.relayout(map, {
+                        'plot_bgcolor': 'rgba(15, 20, 25, 1)',
+                        'paper_bgcolor': 'rgba(15, 20, 25, 1)',
+                        'font.color': '#ffffff',
+                        'geo.bgcolor': 'rgba(15, 20, 25, 1)',
+                        'geo.showframe': true,
+                        'geo.framecolor': '#ffffff',
+                        'geo.framewidth': 2
+                    });
+                }
+            });
+            
+            // Add loading animation
+            const mapWrappers = document.querySelectorAll('.map-wrapper');
+            mapWrappers.forEach(wrapper => {
+                const plotlyDiv = wrapper.querySelector('.plotly-graph-div');
+                if (plotlyDiv && !plotlyDiv.children.length) {
+                    wrapper.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="loading"></div><p>Loading map...</p></div>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
