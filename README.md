@@ -162,12 +162,6 @@ This project is backed by an ongoing research paper:
 
 ---
 
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
 ## Author
 
 **Shravani Chavan**  
